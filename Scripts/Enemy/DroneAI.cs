@@ -16,16 +16,22 @@ public class DroneAI : MonoBehaviour
 
     Vector3 targetPos;
 
-    float idleTime;
-    float rotSpeed;
-    bool rotated;
 
+    int rots;
+    float idleTime;
+    float rotationValue;
+    bool rotated;
+    bool targetSet;
+    Quaternion targetRotation;
+
+    [SerializeField] float rotSpeed;
     [SerializeField] float speed;
     [SerializeField] float maxIdleTime;
 
+
     void Start()
     {
-
+        currState = EnemyState.Idle;
     }
 
     // Update is called once per frame
@@ -34,18 +40,45 @@ public class DroneAI : MonoBehaviour
         if (idleTime > 0f) idleTime -= Time.deltaTime;
         if (currState == EnemyState.Idle)
         {
-            int ran = UnityEngine.Random.Range(0, dronePoitns.Length - 1);
+            targetSet = false;
 
+            rotated = false;
+            int ran = UnityEngine.Random.Range(0, dronePoitns.Length - 1);
             targetPos = dronePoitns[ran].transform.position;
-            currState = EnemyState.Moving;
+
+            if (!targetSet)
+            {
+                Vector3 direction = dronePoitns[ran].transform.position - transform.position;
+                direction.y = 0f;
+
+                targetRotation = Quaternion.LookRotation(direction);
+
+                targetSet = true;
+            }
+
+            transform.rotation = Quaternion.RotateTowards(
+                transform.rotation,
+                targetRotation,
+                rotSpeed * Time.deltaTime
+            );
+
+            if (Quaternion.Angle(transform.rotation, targetRotation) < 0.1f) currState = EnemyState.Moving;
         }
         else if (currState == EnemyState.Moving)
         {
             if (Vector3.Distance(transform.position, targetPos) > 1f) MoveDrone();
             else
             {
-                idleTime = maxIdleTime;
-                Invoke("idleDrone", 3f);
+                int len = 2;
+                if (rots <= len)
+                {
+                    if (idleTime <= 0f) idleDrone();
+                }
+                else
+                {
+                    currState = EnemyState.Idle;
+                }
+
             }
 
         }
@@ -57,14 +90,27 @@ public class DroneAI : MonoBehaviour
     {
         if (!rotated)
         {
-            float rotationValue = UnityEngine.Random.Range(30f, 90f);
-
-            if (transform.eulerAngles.y <= rotationValue)
+            if (!targetSet)
             {
-                transform.Rotate(0f, rotSpeed * Time.deltaTime, 0f);
+                rotationValue = UnityEngine.Random.Range(30f, 90f);
+                targetRotation = Quaternion.Euler(0f, transform.eulerAngles.y + rotationValue, 0f);
+                targetSet = true;
+            }
+
+            if (Quaternion.Angle(transform.rotation, targetRotation) > 0.1f)
+            {
+                Debug.Log("FASDFGASDEADF");
+                transform.rotation = Quaternion.RotateTowards(
+                transform.rotation,
+                targetRotation,
+                rotSpeed * Time.deltaTime
+            );
             }
             else
             {
+                targetSet = false;
+                idleTime = maxIdleTime;
+                rots++;
                 rotated = true;
             }
         }
