@@ -41,18 +41,17 @@ public class DroneAI : MonoBehaviour
         if (idleTime > 0f) idleTime -= Time.deltaTime;
         if (currState == EnemyState.Idle)
         {
-            targetSet = false;
             rots = 0;
             rotated = false;
-            int ran = UnityEngine.Random.Range(0, dronePoitns.Length - 1);
-            targetPos = dronePoitns[ran].transform.position;
 
             if (!targetSet)
             {
+                int ran = UnityEngine.Random.Range(0, dronePoitns.Length - 1);
+                targetPos = dronePoitns[ran].transform.position;
                 Vector3 direction = dronePoitns[ran].transform.position - transform.position;
                 direction.y = 0f;
 
-                targetRotation = Quaternion.LookRotation(direction);
+                targetRotation = Quaternion.LookRotation(direction)* Quaternion.Euler(0, 90, 0);
 
                 targetSet = true;
             }
@@ -63,7 +62,11 @@ public class DroneAI : MonoBehaviour
                 rotSpeed * Time.deltaTime
             );
 
-            if (Quaternion.Angle(transform.rotation, targetRotation) < 0.1f) currState = EnemyState.Moving;
+            if (Quaternion.Angle(transform.rotation, targetRotation) < 0.1f)
+            {
+                targetSet = false;
+                currState = EnemyState.Moving;
+            }
         }
         else if (currState == EnemyState.Moving)
         {
@@ -81,6 +84,7 @@ public class DroneAI : MonoBehaviour
                 }
                 else
                 {
+                    targetSet = false;
                     currState = EnemyState.Idle;
                 }
 
