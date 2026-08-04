@@ -29,6 +29,7 @@ public class DroneAI : MonoBehaviour
     [SerializeField] float maxIdleTime;
 
 
+                int len = 2;
     void Start()
     {
         currState = EnemyState.Idle;
@@ -69,7 +70,6 @@ public class DroneAI : MonoBehaviour
             if (Vector3.Distance(transform.position, targetPos) > 1f) MoveDrone();
             else
             {
-                int len = 2;
                 if (rots <= len)
                 {
                     if (idleTime <= 0f) idleDrone();
@@ -111,6 +111,7 @@ public class DroneAI : MonoBehaviour
                 targetSet = false;
                 idleTime = maxIdleTime;
                 rots++;
+                Debug.Log("Rots: "+ rots);
                 rotated = true;
             }
         }
