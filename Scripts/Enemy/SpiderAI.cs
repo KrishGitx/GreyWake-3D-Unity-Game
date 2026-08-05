@@ -127,7 +127,6 @@ public class SpiderAI : MonoBehaviour
             }
             else
             {
-                Debug.Log("Waiting for time");
                 agent.updatePosition = false;
                 agent.updateRotation = false;
                 agent.isStopped = true;

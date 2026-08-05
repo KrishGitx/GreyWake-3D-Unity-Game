@@ -95,6 +95,13 @@ public class InventoryManger : MonoBehaviour
                             case "Document":
                                 hit.collider.GetComponent<Interaction>().ReadingDoc();
                                 break;
+                            case "Lever":
+                                hit.collider.GetComponent<Interaction>().LeverOn();
+                                break;
+                            case "LockedDoor":
+                                Debug.Log("Heresdfsd");
+                                hit.collider.GetComponent<Interaction>().LockedDoor();
+                                break;
                         }
 
                     }

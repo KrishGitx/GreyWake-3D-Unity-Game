@@ -73,7 +73,6 @@ public class DroneAI : MonoBehaviour
             if (Vector3.Distance(transform.position, targetPos) > 1f) MoveDrone();
             else
             {
-                Debug.Log("WAITING IDLE");
                 if (rots <= len)
                 {
                     if (idleTime <= 0f)
@@ -108,7 +107,6 @@ public class DroneAI : MonoBehaviour
 
             if (Quaternion.Angle(transform.rotation, targetRotation) > 0.1f)
             {
-                Debug.Log("FASDFGASDEADF");
                 transform.rotation = Quaternion.RotateTowards(
                 transform.rotation,
                 targetRotation,
@@ -120,7 +118,6 @@ public class DroneAI : MonoBehaviour
                 targetSet = false;
                 idleTime = maxIdleTime;
                 rots++;
-                Debug.Log("Rots: " + rots);
                 rotated = true;
             }
         }

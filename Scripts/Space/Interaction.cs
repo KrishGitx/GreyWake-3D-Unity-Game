@@ -4,31 +4,35 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class Interaction : MonoBehaviour
 {
 
     Animator anim;
     bool closeItemFoundUI;
+    bool enteringPin;
     public bool isDoorOpen;
     public bool canInteract = true;
 
     [SerializeField] string documentText;
-    
+
 
     [Header("UI Components")]
     [SerializeField] GameObject itemFoundUI;
     [SerializeField] Image SpriteHandler;
     [SerializeField] Sprite UvLight;
     [SerializeField] TMP_Text docTxt;
-    
-    
+    [SerializeField] GameObject enterPin;
+
+
 
     [SerializeField] LevelManager lvlManager;
     [SerializeField] InventoryManger inventorySC;
+    [SerializeField] PlayerMovement Player;
 
 
-     AudioSource audioSrc;
+    AudioSource audioSrc;
     //GameObeject
     // [Header("Ship Objcets")]
     // public GameObject mbLight;
@@ -41,17 +45,21 @@ public class Interaction : MonoBehaviour
 
     void Update()
     {
-        if (closeItemFoundUI && Input.GetKeyDown(KeyCode.Escape))
+        if (closeItemFoundUI && Input.GetKeyDown(KeyCode.Escape) || enteringPin && Input.GetKeyDown(KeyCode.Escape))
         {
-             itemFoundUI.SetActive(false);
-             Time.timeScale = 1f;
-             canInteract = false;
-             closeItemFoundUI = false;
+            itemFoundUI.SetActive(false);
+            Time.timeScale = 1f;
+            Player.enabled = true;
+            if(enteringPin) enterPin.SetActive(false);
+            Cursor.lockState = CursorLockMode.Locked;
+            canInteract = false;
+            closeItemFoundUI = false;
+            enteringPin = false;
         }
     }
 
 
-    public void Door(bool isOpen,float time)
+    public void Door(bool isOpen, float time)
     {
         if (isOpen)
         {
@@ -91,7 +99,16 @@ public class Interaction : MonoBehaviour
             anim.SetBool("isOpen", true);
         }
     }
-
+    public void LeverOn()
+    {
+        anim.SetBool("isOn", true);
+        GameObject[] drones = GameObject.FindGameObjectsWithTag("Drone");
+        for (int i = 0; i < drones.Length; i++)
+        {
+            drones[i].GetComponent<DroneAI>().enabled = false;
+        }
+        canInteract = false;
+    }
     public void OpenCrate(string item)
     {
         //Show Ui- Update Inventory and Intansiate the obj into slot
@@ -102,8 +119,39 @@ public class Interaction : MonoBehaviour
         Time.timeScale = 0f;
 
         inventorySC.AddItem(item);
-        Debug.Log("ADDED "+item+"  to inventory");
+        Debug.Log("ADDED " + item + "  to inventory");
         closeItemFoundUI = true;
+    }
+
+    public void onInputChanged()
+    {
+        Debug.Log("onInputChanged called");
+        TMP_InputField input = enterPin.transform.GetChild(0).GetComponent<TMP_InputField>();
+        Debug.Log(input.text);
+        if (input.text == "3678")
+        {
+            Debug.Log("Door Opene " + input.text);
+            Player.enabled = true;
+            Time.timeScale = 1f;
+            enterPin.SetActive(false);
+            gameObject.GetComponent<ItemId>().ItemName = "Door";
+        }
+
+    }
+    public void LockedDoor()
+    {
+        enteringPin = true;
+
+        enterPin.SetActive(true);
+        TMP_InputField input = enterPin.transform.GetChild(0).GetComponent<TMP_InputField>();
+        Cursor.lockState = CursorLockMode.None;
+        Player.enabled = false;
+        Time.timeScale = 0f;
+
+        EventSystem.current.SetSelectedGameObject(input.gameObject);
+        input.Select();
+        input.ActivateInputField();
+
     }
 
     IEnumerator StartTimer(string triggerName, float duration, bool value)
@@ -112,7 +160,7 @@ public class Interaction : MonoBehaviour
 
         anim.SetBool(triggerName, value);
         canInteract = true;
-        if(triggerName == "isOpen") 
+        if (triggerName == "isOpen")
         {
             yield return new WaitForSeconds(0.4f);
             audioSrc.Play();
