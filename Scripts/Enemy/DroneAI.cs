@@ -1,12 +1,10 @@
-using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class DroneAI : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
-    public GameObject[] dronePoitns;
+    public GameObject[] dronePoints;
     public enum EnemyState
     {
         Idle,
@@ -41,14 +39,14 @@ public class DroneAI : MonoBehaviour
         if (idleTime > 0f) idleTime -= Time.deltaTime;
         if (currState == EnemyState.Idle)
         {
-            rots = 0;
-            rotated = false;
 
             if (!targetSet)
             {
-                int ran = UnityEngine.Random.Range(0, dronePoitns.Length - 1);
-                targetPos = dronePoitns[ran].transform.position;
-                Vector3 direction = dronePoitns[ran].transform.position - transform.position;
+                rotated = false;
+                rots = 0;
+                int ran = UnityEngine.Random.Range(0, dronePoints.Length);
+                targetPos = dronePoints[ran].transform.position;
+                Vector3 direction = dronePoints[ran].transform.position - transform.position;
                 direction.y = 0f;
 
                 targetRotation = Quaternion.LookRotation(direction)* Quaternion.Euler(0, 90, 0);

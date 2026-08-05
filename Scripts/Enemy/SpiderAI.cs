@@ -189,10 +189,8 @@ public class SpiderAI : MonoBehaviour
         {
             if (Vector3.Distance(transform.position, other.transform.position) < 2.5f)
             {
-                Debug.Log("Open DA door");
                 Interaction sc = other.GetComponentInParent<Interaction>();
                 if (sc.canInteract) sc.Door(false,4f);
-                else Debug.Log("Already open");
             }
         }
     }
