@@ -27,15 +27,34 @@ public class DroneAI : MonoBehaviour
     [SerializeField] float maxIdleTime;
 
 
+    LineRenderer line;
+
     int len = 2;
     void Start()
     {
         currState = EnemyState.Idle;
+        line = gameObject.GetComponentInChildren<LineRenderer>();
+
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        Vector3 start = line.GetPosition(0);
+        Vector3 end = line.GetPosition(1);
+
+        Vector3 lineDir = (end - start).normalized;
+        float distance = Vector3.Distance(start, end);
+
+        if (Physics.Raycast(start, lineDir, out RaycastHit hit, distance))
+        {
+            if(hit.collider.tag == "Player")
+            {
+                Debug.Log("Restart Game! PlY ded");
+            }
+        }
+
         if (idleTime > 0f) idleTime -= Time.deltaTime;
         if (currState == EnemyState.Idle)
         {
@@ -46,10 +65,17 @@ public class DroneAI : MonoBehaviour
                 rots = 0;
                 int ran = UnityEngine.Random.Range(0, dronePoints.Length);
                 targetPos = dronePoints[ran].transform.position;
+
                 Vector3 direction = dronePoints[ran].transform.position - transform.position;
                 direction.y = 0f;
 
-                targetRotation = Quaternion.LookRotation(direction)* Quaternion.Euler(0, 90, 0);
+                float targetY = Quaternion.LookRotation(direction).eulerAngles.y;
+
+                targetRotation = Quaternion.Euler(
+                    transform.eulerAngles.x,
+                    targetY + 90f,
+                    transform.eulerAngles.z
+                );
 
                 targetSet = true;
             }
@@ -99,7 +125,7 @@ public class DroneAI : MonoBehaviour
             if (!targetSet)
             {
                 rotationValue = UnityEngine.Random.Range(30f, 90f);
-                targetRotation = Quaternion.Euler(0f, transform.eulerAngles.y + rotationValue, 0f);
+                targetRotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y + rotationValue, transform.eulerAngles.z);
                 targetSet = true;
             }
 
