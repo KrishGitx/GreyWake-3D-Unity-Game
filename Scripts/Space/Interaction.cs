@@ -24,6 +24,7 @@ public class Interaction : MonoBehaviour
     [SerializeField] Sprite UvLight;
     [SerializeField] TMP_Text docTxt;
     [SerializeField] GameObject enterPin;
+    [SerializeField] GameObject FadeIn;
 
 
 
@@ -33,9 +34,7 @@ public class Interaction : MonoBehaviour
 
 
     AudioSource audioSrc;
-    //GameObeject
-    // [Header("Ship Objcets")]
-    // public GameObject mbLight;
+ 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -154,6 +153,11 @@ public class Interaction : MonoBehaviour
 
     }
 
+    public void EntranceDoor()
+    {
+        //Play Fade in;
+    } 
+
     IEnumerator StartTimer(string triggerName, float duration, bool value)
     {
         yield return new WaitForSeconds(duration);
@@ -166,4 +170,6 @@ public class Interaction : MonoBehaviour
             audioSrc.Play();
         }
     }
+
+
 }
