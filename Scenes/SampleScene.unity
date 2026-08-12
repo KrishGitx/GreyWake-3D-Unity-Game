@@ -4132,11 +4132,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8135426111661466322, guid: 5d6a1a7a8d42f4143914fc59dc8b5b0f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.0386
+      value: -1.149
       objectReference: {fileID: 0}
     - target: {fileID: -8135426111661466322, guid: 5d6a1a7a8d42f4143914fc59dc8b5b0f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.288
+      value: 0.886
       objectReference: {fileID: 0}
     - target: {fileID: -7640558969779515294, guid: 5d6a1a7a8d42f4143914fc59dc8b5b0f, type: 3}
       propertyPath: m_Name
@@ -9396,6 +9396,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 4786236169544993108, guid: adec045fd7bd3ef45b731f7e8528ad9f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5482575623632093731, guid: adec045fd7bd3ef45b731f7e8528ad9f, type: 3}
       propertyPath: pickupText
       value: 
@@ -9404,6 +9408,14 @@ PrefabInstance:
       propertyPath: RepairScript
       value: 
       objectReference: {fileID: 935698735}
+    - target: {fileID: 5482575623632093731, guid: adec045fd7bd3ef45b731f7e8528ad9f, type: 3}
+      propertyPath: 'ItemList.Array.data[4]'
+      value: 
+      objectReference: {fileID: 3168612554239207056, guid: 23eb949faeeb21b4dac66fb95aabb451, type: 3}
+    - target: {fileID: 5482575623632093731, guid: adec045fd7bd3ef45b731f7e8528ad9f, type: 3}
+      propertyPath: 'ItemList.Array.data[5]'
+      value: 
+      objectReference: {fileID: 8249880558182759471, guid: 60a4db0eb82624749a308459775e25c4, type: 3}
     - target: {fileID: 7469154347737384560, guid: adec045fd7bd3ef45b731f7e8528ad9f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -18.21
@@ -13254,6 +13266,10 @@ PrefabInstance:
     - target: {fileID: 3168612554239207056, guid: 23eb949faeeb21b4dac66fb95aabb451, type: 3}
       propertyPath: m_Name
       value: Cube
+      objectReference: {fileID: 0}
+    - target: {fileID: 3168612554239207056, guid: 23eb949faeeb21b4dac66fb95aabb451, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3509662796519460011, guid: 23eb949faeeb21b4dac66fb95aabb451, type: 3}
       propertyPath: m_LocalPosition.x

@@ -41,6 +41,7 @@ public class Interaction : MonoBehaviour
     void Start()
     {
         anim = gameObject.GetComponent<Animator>();
+        // inventorySC = GetComponent<InventoryManger>();
     }
 
 
@@ -96,7 +97,6 @@ public class Interaction : MonoBehaviour
         else
         {
             isDoorOpen = true;
-            // mbLight.SetActive(true);
             anim.SetBool("isOpen", true);
         }
     }
@@ -118,10 +118,10 @@ public class Interaction : MonoBehaviour
         SpriteHandler.sprite = UvLight;
 
         Time.timeScale = 0f;
-
-        inventorySC.AddItem(item);
-        Debug.Log("ADDED " + item + "  to inventory");
+        
+        inventorySC.AddItem(item,true);
         closeItemFoundUI = true;
+        lvlManager.uvPickedUp = true;
     }
 
     public void onInputChanged()
@@ -145,7 +145,6 @@ public class Interaction : MonoBehaviour
 
         enterPin.SetActive(true);
         TMP_InputField input = enterPin.transform.GetChild(0).GetComponent<TMP_InputField>();
-        Cursor.lockState = CursorLockMode.None;
         Player.enabled = false;
         Time.timeScale = 0f;
 

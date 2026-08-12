@@ -44,6 +44,8 @@ public class SpiderAI : MonoBehaviour
         animController = GetComponent<Animator>();
         CurrentState = EnemyState.Idle;
         initialPos = transform.position;
+
+        Player = GameObject.FindGameObjectWithTag("Player");
     }
 
     // Update is called once per frame

@@ -9,7 +9,9 @@ public class LevelManager : MonoBehaviour
     public Transform[] spawnPoints;
     public GameObject spider;
 
-    int spawnAmount;
+    int spawnAmount = 5;
+
+    bool spwaned;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -19,11 +21,12 @@ public class LevelManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (uvPickedUp)
+        if (uvPickedUp && !spwaned)
         {
             for (int i = 0; i < spawnAmount; i++)
             {
                 Instantiate(spider, spawnPoints[i].position,Quaternion.identity);
+                if(i == spawnAmount -1) spwaned = true;
             }
         }
     }

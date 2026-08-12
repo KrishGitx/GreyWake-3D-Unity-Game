@@ -17,7 +17,7 @@ public class InventoryManger : MonoBehaviour
     [SerializeField] float waitForScroll;
 
 
-     string[] Inventory = new string[4];
+    string[] Inventory = new string[4];
     int ActiveSlot = 0;
 
     public SpaceShip RepairScript;
@@ -41,7 +41,7 @@ public class InventoryManger : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.E))
                 {
-                    AddItem(hit.collider.GetComponent<ItemId>().ItemName);
+                    AddItem(hit.collider.GetComponent<ItemId>().ItemName,false);
                     Destroy(hit.collider.gameObject);
                     if (ActiveSlot == -1) ActiveSlot += 1;
 
@@ -55,20 +55,19 @@ public class InventoryManger : MonoBehaviour
                     if (Inventory[ActiveSlot] == hit.collider.GetComponent<ItemId>().ItemName)
                     {
                         ItemId im = hit.collider.GetComponent<ItemId>();
-                        if(im.RepairSystem == "NavSystem")
+
+                        if (im.RepairSystem == "NavSystem")
                         {
-                        RepairScript.RepairNavigationSystem(hit.collider.GetComponent<ItemId>().ItemName);
-                        }else if(im.RepairSystem == "LaunchBox")
-                        {
-                            RepairScript.RepairLaunch(hit.collider.GetComponent<ItemId>().ItemName);
+                            RepairScript.RepairSpaceShip(im.ItemName);
                         }
+
                         Destroy(hit.collider.gameObject);
                         Inventory[ActiveSlot] = null;
                         Destroy(Slots[ActiveSlot].transform.GetChild(0).gameObject);
                     }
                     else
                     {
-                        //Subtilte to show displya cable needed
+                        // Subtitle: NavCable needed
                     }
                 }
             }
@@ -83,7 +82,7 @@ public class InventoryManger : MonoBehaviour
                         switch (item)
                         {
                             case "Door":
-                                hit.collider.GetComponent<Interaction>().Door(false,2f);
+                                hit.collider.GetComponent<Interaction>().Door(false, 2f);
                                 break;
                             case "Cabinet":
                                 hit.collider.GetComponent<Interaction>().ShipCabinet(hit.collider.GetComponent<Interaction>().isDoorOpen);
@@ -197,7 +196,7 @@ public class InventoryManger : MonoBehaviour
         }
     }
 
-    public void AddItem(string item)
+    public void AddItem(string item, bool onlyItem)
     {
         for (int i = 0; i < ItemList.Length; i++)
         {
@@ -209,11 +208,19 @@ public class InventoryManger : MonoBehaviour
                 {
                     if (Inventory[j] == null)
                     {
-                        Inventory[j] = item;
-                        Debug.Log("Invent: "+ Inventory[j]);
-                        GameObject obj = Instantiate(ItemList[i], Slots[j].transform.position, Quaternion.identity, Slots[j].transform);
-                        obj.layer = LayerMask.NameToLayer("Water");
-                        break;
+                        if (onlyItem)
+                        {
+                            Inventory[j] = item;
+                            break;
+                        }
+                        else
+                        {
+                            Inventory[j] = item;
+                            Debug.Log("Invent: " + Inventory[j]);
+                            GameObject obj = Instantiate(ItemList[i], Slots[j].transform.position, Quaternion.identity, Slots[j].transform);
+                            obj.layer = LayerMask.NameToLayer("Water");
+                            break;
+                        }
                     }
                 }
 
