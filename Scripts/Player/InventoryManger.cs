@@ -33,7 +33,6 @@ public class InventoryManger : MonoBehaviour
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit hit, 1.2f))
         {
             Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * hit.distance, Color.yellow);
-            // Debug.Log("Raycast Hit");
 
             if (hit.collider.tag == "Item")
             {
@@ -101,6 +100,9 @@ public class InventoryManger : MonoBehaviour
                             case "LockedDoor":
                                 Debug.Log("Heresdfsd");
                                 hit.collider.GetComponent<Interaction>().LockedDoor();
+                                break;
+                            case "EntranceDoor":
+                                hit.collider.GetComponent<Interaction>().EntranceDoor();
                                 break;
                         }
 

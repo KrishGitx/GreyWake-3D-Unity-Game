@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class Interaction : MonoBehaviour
 {
@@ -25,6 +26,7 @@ public class Interaction : MonoBehaviour
     [SerializeField] TMP_Text docTxt;
     [SerializeField] GameObject enterPin;
     [SerializeField] GameObject FadeIn;
+    [SerializeField] GameObject loadingTxt;
 
 
 
@@ -156,7 +158,21 @@ public class Interaction : MonoBehaviour
     public void EntranceDoor()
     {
         //Play Fade in;
+        FadeIn.GetComponent<Animator>().SetBool("fadeIn",true);
+
+        if(SceneManager.GetActiveScene().buildIndex == 0) StartCoroutine(loadScene(1));
+        else StartCoroutine(loadScene(0));
+
+
     } 
+
+
+    IEnumerator loadScene(int index)
+    {
+        yield return new WaitForSeconds(1.2f);
+        loadingTxt.SetActive(true);
+        SceneManager.LoadSceneAsync(index);
+    }
 
     IEnumerator StartTimer(string triggerName, float duration, bool value)
     {
