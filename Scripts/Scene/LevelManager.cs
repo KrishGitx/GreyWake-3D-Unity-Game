@@ -10,7 +10,7 @@ public class LevelManager : MonoBehaviour
     public GameObject spider;
 
     int spawnAmount = 5;
-
+    int currSpwan;
     bool spwaned;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -23,11 +23,14 @@ public class LevelManager : MonoBehaviour
     {
         if (uvPickedUp && !spwaned)
         {
-            for (int i = 0; i < spawnAmount; i++)
+            while(currSpwan <= spawnAmount)
             {
-                Instantiate(spider, spawnPoints[i].position,Quaternion.identity);
-                if(i == spawnAmount -1) spwaned = true;
+                int ranPos = UnityEngine.Random.Range(0,spawnPoints.Length);
+                Instantiate(spider, spawnPoints[ranPos].position,Quaternion.identity);
+                currSpwan++;
+                // if(currSpwan == spawnAmount -1) spwaned = true;
             }
+            
         }
     }
 }

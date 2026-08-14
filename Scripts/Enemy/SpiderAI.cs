@@ -55,7 +55,7 @@ public class SpiderAI : MonoBehaviour
         if (Health <= 0f)
         {
             animController.SetTrigger("isDead");
-            // Destroy(gameObject,1.55f);
+            Destroy(gameObject,1.55f);
         }
 
         if (currIdleTime >= 0f) currIdleTime -= Time.deltaTime;
