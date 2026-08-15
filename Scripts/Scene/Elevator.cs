@@ -12,16 +12,14 @@ public class Elevator : MonoBehaviour
     bool isDown = true;
     bool navPickedUp = true;
     bool Triggered;
+    float waitFor = 0f;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-
-    }
-
+  
     // Update is called once per frame
     void Update()
     {
-        if (Triggered)
+        if(waitFor >= 0f ) waitFor -= Time.deltaTime;
+        if (Triggered && waitFor <= 0f)
         {
             if (navPickedUp && isDown)
             {
@@ -53,6 +51,7 @@ public class Elevator : MonoBehaviour
     {
         if (other.tag == "Player")
         {
+            waitFor = 1.8f;
             Triggered = true;
         }
     }

@@ -22,6 +22,8 @@ public class SpaceShip : MonoBehaviour
         Player.SetActive(false);
         mainCamera.enabled = false;
         navCinematicCamera.enabled = true;
+        PlayerPrefs.SetInt("Repaired",1);
+        PlayerPrefs.Save();
 
         StartCoroutine(Time());
     }

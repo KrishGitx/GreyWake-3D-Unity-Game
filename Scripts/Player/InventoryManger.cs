@@ -8,8 +8,6 @@ using TMPro;
 
 public class InventoryManger : MonoBehaviour
 {
-    // List<string> Inventory = new List<string>();
-
 
     [SerializeField] GameObject[] Slots;
     [SerializeField] GameObject[] ItemList;
@@ -25,7 +23,15 @@ public class InventoryManger : MonoBehaviour
     public TMP_Text pickupText;
     bool didHit;
 
-
+    void Start()
+    {
+        int chip = PlayerPrefs.GetInt("NavChip");
+        if (chip == 1)
+        {
+            AddItem("NavChip", false);
+            Debug.Log("NAVCHIP FOUND!");
+        }
+    }
     // Update is called once per frame
     void Update()
     {
@@ -41,10 +47,15 @@ public class InventoryManger : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.E))
                 {
-                    AddItem(hit.collider.GetComponent<ItemId>().ItemName,false);
+                    AddItem(hit.collider.GetComponent<ItemId>().ItemName, false);
+                    if (hit.collider.GetComponent<ItemId>().ItemName == "NavChip")
+                    {
+                        PlayerPrefs.SetInt("NavChip", 1);
+                        PlayerPrefs.Save();
+                        Debug.Log("AT CHIP");
+                    }
                     Destroy(hit.collider.gameObject);
                     if (ActiveSlot == -1) ActiveSlot += 1;
-
                 }
             }
             else if (hit.collider.tag == "RepairPart")
@@ -102,6 +113,9 @@ public class InventoryManger : MonoBehaviour
                                 break;
                             case "EntranceDoor":
                                 hit.collider.GetComponent<Interaction>().EntranceDoor();
+                                break;
+                            case "ShipLever":
+                                hit.collider.GetComponent<Interaction>().shipLever();
                                 break;
                         }
 

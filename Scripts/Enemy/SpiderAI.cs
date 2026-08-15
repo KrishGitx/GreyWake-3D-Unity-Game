@@ -36,6 +36,10 @@ public class SpiderAI : MonoBehaviour
 
     public GameObject Player;
 
+    //Attacking:
+    [SerializeField] int damage;
+    float timeToAttack = 0f;
+
     
     // Start is called once before the first execution of Update after the MonoBehaviour is create
     void Start()
@@ -59,6 +63,7 @@ public class SpiderAI : MonoBehaviour
         }
 
         if (currIdleTime >= 0f) currIdleTime -= Time.deltaTime;
+        // if(timeToAttack >=0f ) timeToAttack -= Time.deltaTime;
         if (CurrentState == EnemyState.Idle)
         {
             animController.SetBool("isMoving", true);
@@ -139,7 +144,6 @@ public class SpiderAI : MonoBehaviour
         else if (CurrentState == EnemyState.Chase)
         {
             agent.updateRotation = false;
-            // transform.LookAt(Player.transform.position);
             animController.SetBool("isMoving", true);
             Quaternion targetRot = Quaternion.LookRotation(Player.transform.position  - transform.position);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, rotSpeed * Time.deltaTime);
@@ -150,8 +154,18 @@ public class SpiderAI : MonoBehaviour
             else if (Vector3.Distance(transform.position, Player.transform.position) < distanceBtwPlayer)
             {
                 agent.ResetPath();
-                Debug.Log("Attack");
                 animController.SetBool("isMoving", false);
+
+                if(timeToAttack <= 0f)
+                {
+                    animController.SetTrigger("Attack");
+                    Player.GetComponent<PlayerManager>().Health -= damage;
+                    timeToAttack = 1.2f;
+                }
+                else
+                {
+                    timeToAttack -= Time.deltaTime;
+                }
             }
             if (Vector3.Distance(transform.position, Player.transform.position) > 13f) { CurrentState = EnemyState.Idle; animController.SetBool("isMoving", false); }
         }

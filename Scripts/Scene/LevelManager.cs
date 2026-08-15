@@ -15,7 +15,8 @@ public class LevelManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        PlayerPrefs.SetInt("Pos",1);
+         PlayerPrefs.Save();
     }
 
     // Update is called once per frame
@@ -23,7 +24,7 @@ public class LevelManager : MonoBehaviour
     {
         if (uvPickedUp && !spwaned)
         {
-            while(currSpwan <= spawnAmount)
+            while(currSpwan < spawnAmount)
             {
                 int ranPos = UnityEngine.Random.Range(0,spawnPoints.Length);
                 Instantiate(spider, spawnPoints[ranPos].position,Quaternion.identity);

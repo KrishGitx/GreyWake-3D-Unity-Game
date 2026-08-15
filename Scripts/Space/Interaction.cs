@@ -28,6 +28,8 @@ public class Interaction : MonoBehaviour
     [SerializeField] GameObject FadeIn;
     [SerializeField] GameObject loadingTxt;
 
+    [SerializeField] GameObject credsScreen;
+
 
 
     [SerializeField] LevelManager lvlManager;
@@ -35,8 +37,9 @@ public class Interaction : MonoBehaviour
     [SerializeField] PlayerMovement Player;
 
 
+
     AudioSource audioSrc;
- 
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -52,7 +55,7 @@ public class Interaction : MonoBehaviour
             itemFoundUI.SetActive(false);
             Time.timeScale = 1f;
             Player.enabled = true;
-            if(enteringPin) enterPin.SetActive(false);
+            if (enteringPin) enterPin.SetActive(false);
             Cursor.lockState = CursorLockMode.Locked;
             canInteract = false;
             closeItemFoundUI = false;
@@ -118,11 +121,12 @@ public class Interaction : MonoBehaviour
         SpriteHandler.sprite = UvLight;
 
         Time.timeScale = 0f;
-        
-        inventorySC.AddItem(item,true);
+
+        inventorySC.AddItem(item, true);
         closeItemFoundUI = true;
         lvlManager.uvPickedUp = true;
     }
+
 
     public void onInputChanged()
     {
@@ -157,14 +161,31 @@ public class Interaction : MonoBehaviour
     public void EntranceDoor()
     {
         //Play Fade in;
-        FadeIn.GetComponent<Animator>().SetBool("fadeIn",true);
+        FadeIn.GetComponent<Animator>().SetBool("fadeIn", true);
 
-        if(SceneManager.GetActiveScene().buildIndex == 0) StartCoroutine(loadScene(1));
+        if (SceneManager.GetActiveScene().buildIndex == 0)
+        {
+            StartCoroutine(loadScene(1));
+            PlayerPrefs.SetInt("Pos", 1);
+             PlayerPrefs.Save();
+        }
         else StartCoroutine(loadScene(0));
 
 
-    } 
+    }
 
+    public void shipLever()
+    {
+        int repaired = PlayerPrefs.GetInt("Repaired");
+        if(repaired == 1)
+        {
+            Debug.Log("HERE");
+            FadeIn.GetComponent<Animator>().SetBool("fadeIn", true);
+            credsScreen.SetActive(true);
+
+            //CutScene
+        }
+    }
 
     IEnumerator loadScene(int index)
     {
