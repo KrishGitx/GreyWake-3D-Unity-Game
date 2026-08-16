@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEditor.Rendering;
 
 public class Interaction : MonoBehaviour
 {
@@ -35,6 +36,9 @@ public class Interaction : MonoBehaviour
     [SerializeField] LevelManager lvlManager;
     [SerializeField] InventoryManger inventorySC;
     [SerializeField] PlayerMovement Player;
+    
+    
+    [SerializeField] GameObject dialouge;
 
 
 
@@ -185,6 +189,15 @@ public class Interaction : MonoBehaviour
 
             //CutScene
         }
+        else
+        {
+            dialouge.GetComponent<TMP_Text>().text = "I need to find a new NavChip";
+            Invoke("dialougefadeout",2f);
+        }
+    }
+    void dialougefadeout()
+    {
+        dialouge.GetComponent<TMP_Text>().text = "";
     }
 
     IEnumerator loadScene(int index)
