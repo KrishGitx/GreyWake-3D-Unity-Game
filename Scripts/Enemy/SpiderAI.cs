@@ -40,7 +40,11 @@ public class SpiderAI : MonoBehaviour
     [SerializeField] int damage;
     float timeToAttack = 0f;
 
-    
+    AudioSource audioSrc;
+
+    public AudioClip bite;
+    public AudioClip death;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is create
     void Start()
     {
@@ -48,6 +52,8 @@ public class SpiderAI : MonoBehaviour
         animController = GetComponent<Animator>();
         CurrentState = EnemyState.Idle;
         initialPos = transform.position;
+
+        audioSrc = gameObject.GetComponent<AudioSource>();
 
         Player = GameObject.FindGameObjectWithTag("Player");
     }
@@ -59,7 +65,9 @@ public class SpiderAI : MonoBehaviour
         if (Health <= 0f)
         {
             animController.SetTrigger("isDead");
-            Destroy(gameObject,1.55f);
+            audioSrc.PlayOneShot(death);
+            audioSrc.volume = 0.5f;
+            Destroy(gameObject, 1.55f);
         }
 
         if (currIdleTime >= 0f) currIdleTime -= Time.deltaTime;
@@ -145,7 +153,7 @@ public class SpiderAI : MonoBehaviour
         {
             agent.updateRotation = false;
             animController.SetBool("isMoving", true);
-            Quaternion targetRot = Quaternion.LookRotation(Player.transform.position  - transform.position);
+            Quaternion targetRot = Quaternion.LookRotation(Player.transform.position - transform.position);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, rotSpeed * Time.deltaTime);
             if (Vector3.Distance(transform.position, Player.transform.position) > distanceBtwPlayer)
             {
@@ -156,7 +164,7 @@ public class SpiderAI : MonoBehaviour
                 agent.ResetPath();
                 animController.SetBool("isMoving", false);
 
-                if(timeToAttack <= 0f)
+                if (timeToAttack <= 0f)
                 {
                     animController.SetTrigger("Attack");
                     Player.GetComponent<PlayerManager>().Health -= damage;
@@ -173,6 +181,10 @@ public class SpiderAI : MonoBehaviour
         checkEnemyMovement();
     }
 
+    public void biteSound()
+    {
+        audioSrc.PlayOneShot(bite);
+    }
 
     void checkEnemyMovement()
     {
@@ -206,7 +218,7 @@ public class SpiderAI : MonoBehaviour
             if (Vector3.Distance(transform.position, other.transform.position) < 2.5f)
             {
                 Interaction sc = other.GetComponentInParent<Interaction>();
-                if (sc.canInteract) sc.Door(false,4f);
+                if (sc.canInteract) sc.Door(false, 4f);
             }
         }
     }

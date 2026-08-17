@@ -71,16 +71,16 @@ public class InventoryManger : MonoBehaviour
 
                         if (im.RepairSystem == "NavSystem")
                         {
+                            Destroy(hit.collider.gameObject);
+                            Inventory[ActiveSlot] = null;
+                            Destroy(Slots[ActiveSlot].transform.GetChild(0).gameObject);
                             RepairScript.RepairSpaceShip(im.ItemName);
                         }
 
-                        Destroy(hit.collider.gameObject);
-                        Inventory[ActiveSlot] = null;
-                        Destroy(Slots[ActiveSlot].transform.GetChild(0).gameObject);
                     }
                     else
                     {
-                        dialouge.GetComponent<TMP_Text>().text = "I need to find a new NavChip";
+                        dialouge.GetComponent<TMP_Text>().text = "I need a Navchip here.";
                         Invoke("dialougefadeout", 2f);
                     }
                 }
@@ -217,7 +217,6 @@ public class InventoryManger : MonoBehaviour
     {
         for (int i = 0; i < ItemList.Length; i++)
         {
-            Debug.Log(ItemList[i].GetComponent<ItemId>().ItemName);
             if (item == ItemList[i].GetComponent<ItemId>().ItemName)
             {
                 Debug.Log("Item Found!");
@@ -236,12 +235,29 @@ public class InventoryManger : MonoBehaviour
                             Debug.Log("Invent: " + Inventory[j]);
                             GameObject obj = Instantiate(ItemList[i], Slots[j].transform.position, Quaternion.identity, Slots[j].transform);
                             obj.layer = LayerMask.NameToLayer("Water");
+                            if (item == "NavChip")
+                            {
+                                obj.transform.localPosition = new Vector3(-0.02f, -0.05f, 1.61f);
+                                obj.transform.localRotation = Quaternion.Euler(357f, -56f, -37.4f);
+                                obj.transform.localScale = new Vector3(5f, 5f, 5f);
+                            }
+                            recriveLayer(obj.transform);
                             break;
                         }
                     }
                 }
 
             }
+        }
+    }
+
+    void recriveLayer(Transform obj)
+    {
+        int waterLayer = LayerMask.NameToLayer("Water");
+        foreach (Transform child in obj.transform)
+        {
+            child.gameObject.layer = waterLayer;
+            recriveLayer(child.transform);
         }
     }
 

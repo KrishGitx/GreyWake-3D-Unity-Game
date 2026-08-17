@@ -41,17 +41,19 @@ public class DroneAI : MonoBehaviour
     void Update()
     {
 
-        Vector3 start = line.GetPosition(0);
-        Vector3 end = line.GetPosition(1);
+        Vector3 start = line.transform.TransformPoint(line.GetPosition(0));
+        Vector3 end = line.transform.TransformPoint(line.GetPosition(1));
 
         Vector3 lineDir = (end - start).normalized;
         float distance = Vector3.Distance(start, end);
 
+        Debug.DrawRay(start, lineDir * distance, Color.yellow);
+
         if (Physics.Raycast(start, lineDir, out RaycastHit hit, distance))
         {
-            if(hit.collider.tag == "Player")
+            if (hit.collider.CompareTag("Player"))
             {
-                Debug.Log("Restart Game! PlY ded");
+                hit.collider.gameObject.GetComponent<PlayerManager>().Health = 0;
             }
         }
 

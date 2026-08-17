@@ -1,12 +1,11 @@
 using System;
 using System.Collections;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
-using UnityEditor.Rendering;
+
 
 public class Interaction : MonoBehaviour
 {
@@ -36,13 +35,22 @@ public class Interaction : MonoBehaviour
     [SerializeField] LevelManager lvlManager;
     [SerializeField] InventoryManger inventorySC;
     [SerializeField] PlayerMovement Player;
-    
-    
+
+
     [SerializeField] GameObject dialouge;
 
+    public Camera mainCamera;
+    public Camera cinematicCam;
 
+
+    public Animator camShake;
+    public Animator Ship;
+    public GameObject PlayerObj;
+    public GameObject Ramp;
 
     AudioSource audioSrc;
+
+    public AudioSource Horn;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -54,14 +62,31 @@ public class Interaction : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.R) && closeItemFoundUI)
+        {
+
+            itemFoundUI.SetActive(false);
+            Cursor.lockState = CursorLockMode.Locked;
+            Time.timeScale = 1f;
+            Player.enabled = true;
+            canInteract = false;
+            closeItemFoundUI = false;
+        }
         if (closeItemFoundUI && Input.GetKeyDown(KeyCode.Escape) || enteringPin && Input.GetKeyDown(KeyCode.Escape))
         {
+            if (lvlManager.uvPickedUp) Horn.Play();
             itemFoundUI.SetActive(false);
             Time.timeScale = 1f;
             Player.enabled = true;
-            if (enteringPin) enterPin.SetActive(false);
+            if (enteringPin)
+            {
+                enterPin.SetActive(false);
+                canInteract = true;
+            }else
+            {
+                canInteract = false;
+            }
             Cursor.lockState = CursorLockMode.Locked;
-            canInteract = false;
             closeItemFoundUI = false;
             enteringPin = false;
         }
@@ -156,6 +181,8 @@ public class Interaction : MonoBehaviour
         Player.enabled = false;
         Time.timeScale = 0f;
 
+        Cursor.lockState = CursorLockMode.None;
+
         EventSystem.current.SetSelectedGameObject(input.gameObject);
         input.Select();
         input.ActivateInputField();
@@ -167,13 +194,13 @@ public class Interaction : MonoBehaviour
         //Play Fade in;
         FadeIn.GetComponent<Animator>().SetBool("fadeIn", true);
 
-        if (SceneManager.GetActiveScene().buildIndex == 0)
+        if (SceneManager.GetActiveScene().buildIndex == 1)
         {
-            StartCoroutine(loadScene(1));
+            StartCoroutine(loadScene(2));
             PlayerPrefs.SetInt("Pos", 1);
-             PlayerPrefs.Save();
+            PlayerPrefs.Save();
         }
-        else StartCoroutine(loadScene(0));
+        else StartCoroutine(loadScene(1));
 
 
     }
@@ -181,20 +208,38 @@ public class Interaction : MonoBehaviour
     public void shipLever()
     {
         int repaired = PlayerPrefs.GetInt("Repaired");
-        if(repaired == 1)
+        if (repaired == 1)
         {
             Debug.Log("HERE");
             FadeIn.GetComponent<Animator>().SetBool("fadeIn", true);
-            credsScreen.SetActive(true);
+            // credsScreen.SetActive(true);
+            Ramp.SetActive(false);
+            PlayerObj.SetActive(false);
+            FadeIn.GetComponent<Animator>().SetBool("fadeIn", false);
 
-            //CutScene
+            mainCamera.enabled = false;
+            cinematicCam.enabled = true;
+
+            camShake.SetBool("shake", true);
+            Ship.SetBool("startLaunch", true);
+
+            Invoke("EndCreds", 3.5f);
+
         }
         else
         {
-            dialouge.GetComponent<TMP_Text>().text = "I need to find a new NavChip";
-            Invoke("dialougefadeout",2f);
+            dialouge.GetComponent<TMP_Text>().text = "I need to put NavChip inside the board to the left";
+            Invoke("dialougefadeout", 2f);
         }
     }
+
+    void EndCreds()
+    {
+        FadeIn.GetComponent<Animator>().SetBool("fadeIn", true);
+        credsScreen.SetActive(true);
+        SceneManager.LoadScene(0);
+    }
+
     void dialougefadeout()
     {
         dialouge.GetComponent<TMP_Text>().text = "";

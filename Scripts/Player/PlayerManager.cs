@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using UnityEngine.UI;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -18,23 +19,12 @@ public class PlayerManager : MonoBehaviour
     public Transform TowerPos;
 
     public GameObject dialouge;
+
+    public Image healthEffect;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         inventoryManger = gameObject.GetComponent<InventoryManger>();
-
-        int isStart = PlayerPrefs.GetInt("isStarting", 0);
-        if (isStart == 0)
-        {
-            dialouge.GetComponent<TMP_Text>().text = "Which Planet i m even on?";
-            Invoke("dialougefadeout", 2f);
-            dialouge.GetComponent<TMP_Text>().text = "That crash was brutal, but spaceship is fine";
-            Invoke("dialougefadeout", 2f);
-            dialouge.GetComponent<TMP_Text>().text = "I need to Check Inside";
-            Invoke("dialougefadeout", 2f);
-            PlayerPrefs.SetInt("isStarting",1);
-        }
-
 
         int quality = PlayerPrefs.GetInt("QualityLevel", 2);
         QualitySettings.SetQualityLevel(quality);
@@ -52,8 +42,25 @@ public class PlayerManager : MonoBehaviour
     void Update()
     {
 
+        if (Health > 0 && Health < 40)
+        {
+            Color color = healthEffect.color;
+            color.a = 0.11f;
+            healthEffect.color = color;
+        }else if(Health >= 40 && Health<= 80)
+        {
+            Color color = healthEffect.color;
+            color.a = 0.07f;
+            healthEffect.color = color;
+        }else if(Health > 80 && Health <= 99)
+        {
+            Color color = healthEffect.color;
+            color.a = 0.04f;
+            healthEffect.color = color;
+        }
         if (Health <= 0)
         {
+            healthEffect.enabled = false;
             Time.timeScale = 0f;
             restartMenu.SetActive(true);
             Cursor.lockState = CursorLockMode.None;
@@ -86,8 +93,5 @@ public class PlayerManager : MonoBehaviour
             }
         }
     }
-    void dialougefadeout()
-    {
-        dialouge.GetComponent<TMP_Text>().text = "";
-    }
+
 }

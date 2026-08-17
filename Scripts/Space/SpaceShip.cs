@@ -10,6 +10,13 @@ public class SpaceShip : MonoBehaviour
     public Camera navCinematicCamera;
     public Camera mainCamera;
 
+
+    AudioSource src;
+
+    void Start()
+    {
+        src = GetComponent<AudioSource>();
+    }
     public void RepairSpaceShip(string item)
     {
         if (item != "NavChip")
@@ -35,5 +42,10 @@ public class SpaceShip : MonoBehaviour
         Player.SetActive(true);
         mainCamera.enabled = true;
         navCinematicCamera.enabled = false;
+    }
+
+    public void playSound()
+    {
+        src.Play();
     }
 }
