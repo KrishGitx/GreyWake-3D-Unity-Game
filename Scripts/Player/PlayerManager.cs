@@ -1,6 +1,6 @@
-using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -16,16 +16,30 @@ public class PlayerManager : MonoBehaviour
     public GameObject restartMenu;
 
     public Transform TowerPos;
+
+    public GameObject dialouge;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         inventoryManger = gameObject.GetComponent<InventoryManger>();
 
+        int isStart = PlayerPrefs.GetInt("isStarting", 0);
+        if (isStart == 0)
+        {
+            dialouge.GetComponent<TMP_Text>().text = "Which Planet i m even on?";
+            Invoke("dialougefadeout", 2f);
+            dialouge.GetComponent<TMP_Text>().text = "That crash was brutal, but spaceship is fine";
+            Invoke("dialougefadeout", 2f);
+            dialouge.GetComponent<TMP_Text>().text = "I need to Check Inside";
+            Invoke("dialougefadeout", 2f);
+            PlayerPrefs.SetInt("isStarting",1);
+        }
+
+
         int quality = PlayerPrefs.GetInt("QualityLevel", 2);
         QualitySettings.SetQualityLevel(quality);
 
         int pos = PlayerPrefs.GetInt("Pos");
-        Debug.Log("Pos: "+pos);
         if (SceneManager.GetActiveScene().buildIndex == 0 && pos == 1)
         {
             transform.position = TowerPos.position;
@@ -45,7 +59,6 @@ public class PlayerManager : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
             gameObject.GetComponent<PlayerManager>().enabled = false;
         }
-        // && inventoryManger.Inventory.Contains("UVLight")
         if (Input.GetKeyDown(KeyCode.F) && inventoryManger.findItem("UVLight"))
         {
             if (isOn)
@@ -72,5 +85,9 @@ public class PlayerManager : MonoBehaviour
                 }
             }
         }
+    }
+    void dialougefadeout()
+    {
+        dialouge.GetComponent<TMP_Text>().text = "";
     }
 }

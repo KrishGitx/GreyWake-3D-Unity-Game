@@ -23,6 +23,8 @@ public class InventoryManger : MonoBehaviour
     public TMP_Text pickupText;
     bool didHit;
 
+    [SerializeField] GameObject dialouge;
+
     void Start()
     {
         int chip = PlayerPrefs.GetInt("NavChip");
@@ -78,7 +80,8 @@ public class InventoryManger : MonoBehaviour
                     }
                     else
                     {
-                        // Subtitle: NavCable needed
+                        dialouge.GetComponent<TMP_Text>().text = "I need to find a new NavChip";
+                        Invoke("dialougefadeout", 2f);
                     }
                 }
             }
@@ -247,6 +250,9 @@ public class InventoryManger : MonoBehaviour
         return Inventory.Contains(item);
     }
 
-
+    void dialougefadeout()
+    {
+        dialouge.GetComponent<TMP_Text>().text = "";
+    }
 
 }
